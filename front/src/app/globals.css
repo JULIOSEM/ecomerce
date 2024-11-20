@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+  margin: 0;
+  padding: 0;
+}
+/* Asegúrate de que el body tenga un fondo negro */
+body {
+  background-color: black;
+  margin: 0; /* Elimina márgenes no deseados */
+}
+
+/* Para asegurar que el footer esté completamente pegado al fondo */
+html, body, #__next {
+  height: 100%;
+}
