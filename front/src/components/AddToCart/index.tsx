@@ -1,30 +1,37 @@
-"use client";
-
-
-import React, { useContext } from 'react'
-import { CartContext } from '@/context/cart';
+'use client'
+import { CartContext } from '@/context/cart'
+import { useContext } from 'react'
+import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/user';
+import Button from '../Button';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
-export default function AddToCart({id}: {id: number}) {
-    const {addToCart} = useContext(CartContext);
-    const { isLogged } = useContext(UserContext)
+const MySwal = withReactContent(Swal);
+
+
+export default function AddToCart({ id }: { id: number }) {
+    const { addToCart } = useContext(CartContext);
+    const {isLogged} = useContext(UserContext)
+    const router = useRouter(); 
 
     function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
-        
-      if (!isLogged) {
-        alert("You need to be logged in to add items to the cart")
-        return;
-      }
-      addToCart(id)
+        if(!isLogged) {
+            MySwal.fire({
+                title: 'Hey!',
+                text: 'You have to be logged in to add items to the cart',
+                icon: 'warning'
+              });
+            router.push("/auth-signup")
+            return
+        }
+        event.preventDefault();
+        addToCart(id);
     }
-  return (
-    <button 
-    type='button'
-    onClick={handleClick}
-    className='text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 transition-colors duration-300'
-  >
-    Add to cart
-  </button>
-  
-  )
+
+    return (
+        <div>
+            <Button content='ADD TO CART' onClick={handleClick}></Button>
+        </div>
+    );
 }

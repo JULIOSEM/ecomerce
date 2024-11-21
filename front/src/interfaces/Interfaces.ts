@@ -9,9 +9,9 @@ interface IProduct {
 }
 
 interface ICategory {
-   id: number,
-   name: string,
-   products: IProduct;
+    id: number;
+    name: string;
+    products?: IProduct[];
 }
 
 interface ILogin {
@@ -45,7 +45,6 @@ interface IOrderResponse {
     products: IProduct[];
 
 }
-
 
 interface ILoginUser {
     email: string;
@@ -82,6 +81,12 @@ interface IUserResponse {
     login: boolean;
     user: Partial<IUser> | null;
     token: string;
+}
+
+export interface IButtonProps {
+    content: string;
+    onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void; 
+    redirectTo?: string;
 }
 
 export interface IUserContextType {
@@ -135,6 +140,7 @@ export type {
     IUser,
     IRegisterUser,
     IProduct,
+    ICategory,
     IProductCardProps,
     IProductsGridProps,
     ICartContextType,

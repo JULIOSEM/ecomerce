@@ -24,13 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        
+        <UserProvider>
           <CartProvider>
             <NavbarComponent />
             {children}
             <Footer />
           </CartProvider>
-        
+        </UserProvider>
       </body>
     </html>
   );

@@ -1,6 +1,5 @@
 import React from 'react'
-import LoginComponent from '@/components/Signin/Signin';
-
+import LoginComponent from '@/components/LoginComponent/index';
 export default function AuthSignIn() {
   return (
     <div className='flex flex-col mt-8 md:flex-row md:self-center 

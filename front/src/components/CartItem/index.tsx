@@ -15,7 +15,7 @@ export default function CartItem({product, remove}: IProductCardProps) {
             />  
             <span className='ml-3'>{product.name}</span>
         </div>
-        <div className='w-1/3 text-center'>{product.quantity}</div>
+        <div className='w-1/3 text-center'>{product.stock}</div>
         <div className='w-1/3 text-center'>$ {product.price}</div>
         <div className='w-1/3 text-center'>
             <button

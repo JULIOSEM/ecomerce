@@ -1,57 +1,68 @@
-"use client"
+'use client'
 
-import React, { useContext, useEffect, useRef } from "react";
 import { UserContext } from "@/context/user";
-import { CartContext } from "@/context/cart";
+import { IOrder } from "@/interfaces/Interfaces";
+import { getUsersOrders } from "@/lib/server/fetchOrders";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
 
-export default function UserOrders() {
-  const { getOrders, orders } = useContext(UserContext);
-  const { orderTotals } = useContext(CartContext);
-  const didFetchOrders = useRef(false); // Este ref se utiliza para asegurar que solo se haga una llamada
+export default function UserDashboardComponent() {
+  const router = useRouter();
+  const { user, logOut } = useContext(UserContext);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    logOut();
+    router.push("/");
+  };
+
+  const [orders, setOrder] = useState<IOrder[]>([]);
+
+  const fetchData = async () => {
+    const orderResponse = await getUsersOrders(user?.token!);
+    setOrder(orderResponse);
+  };
 
   useEffect(() => {
-    if (!didFetchOrders.current) {
-      getOrders();
-      didFetchOrders.current = true; // Marca que ya se hizo la llamada
+    if (user?.user?.name) {
+      user.user.name === undefined ? router.push('/login') : fetchData();
     }
-  }, [getOrders]);
+  }, [user?.user]);
+
+  let counter = 1;
+
+  const capitalizeFirstLetter = (string: string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  };
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold tracking-tight text-gray-900 mb-4">My orders</h2>
-      {orders.length > 0 ? (
-        <ul>
-          {orders.map((Order, index) => {
-            const orderDate = new Date(order.date);
-            return (
-              <li key={order.id} className="flex flex-col md:flex-row bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 p-6">
-                <div className="flex-1">
-                  <p className="mb-2 text-xl font-semibold text-gray-900">Order ID: {order.id}</p>
-                  <p className="font-normal text-gray-700">Total: ${orderTotals[index]}</p>
-                  <p className="font-normal text-gray-700">Date: {orderDate.toLocaleDateString()}</p>
-                  <p className="font-normal text-gray-700">Time: {orderDate.toLocaleTimeString()}</p>
-                </div>
-                
-                {/* Mostrar productos comprados en la orden */}
-                <div className="flex-1 mt-4 md:mt-0 md:ml-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Purchased products:</h3>
-                  <ul>
-                    {order.products.map((product) => (
-                      <li key={product.id} className="mb-2">
-                        <p className="font-medium text-gray-800">Product: {product.name}</p>
-                        <p className="text-gray-700">
-                        Price per unit: ${product.price}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
-      ) : (
-        <p>You dont have orders in this moment.</p>
-      )}
+    <div className="min-h-screen text-white p-8 pt-16">
+      <div className="bg-gray-900 bg-opacity-50 p-6 rounded-lg shadow-md mb-8">
+        <h2 className="text-2xl font-bold mb-4 text-pageColor"> Welcome, {user?.user?.name ? capitalizeFirstLetter(user.user.name) : ''}!</h2>
+        <p className="mb-2">Your dashboard is your central hub for managing your account and orders.</p>
+        <p className="mb-4">This is your email: <span className="font-semibold">{user?.user?.email}</span></p>
+        <button
+          onClick={handleClick}
+          className="bg-logOutButton hover:bg-logOutButtonHover text-white font-semibold py-2 px-4 rounded-3xl transition duration-300 w-40"
+        >
+          Log Out
+        </button>
+      </div>
+
+      <div className="bg-gray-900 bg-opacity-50 p-6 rounded-lg shadow-md">
+        <h3 className="text-xl font-semibold mb-4 text-pageColor">YOUR ORDERS</h3>
+        {orders && orders.length > 0 ? (
+          orders.map((order: IOrder) => (
+            <div key={order.id} className="mb-4 p-4 bg-gray-900 bg-opacity-50 rounded-lg">
+              <p className="text-lg font-medium">Order n°{counter++}</p>
+              <p className="text-sm mb-1">{new Date(order.date)?.toLocaleDateString()}</p>
+              <p className="text-sm uppercase tracking-wider font-bold text-green-400">{order.status.toLocaleUpperCase()}</p>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-400">You havent placed any orders yet.</p>
+        )}
+      </div>
     </div>
   );
-};
+}
