@@ -25,6 +25,9 @@ export default function CartGrid() {
             <div className="w-full text-end pe-5">
               <p className="font-semibold text-white ">${item.price}.00</p>
             </div>
+            <div>
+            <Button content="DELETE" onClick={() => removeFromCart(item.id)} />
+            </div>
           </div>
         ))
       ) : (

@@ -1,7 +1,6 @@
 "use client";
 import { UserContext } from "@/context/user";
 import { ILoginUser } from "@/interfaces/Interfaces";
-import { postSignIn } from "@/lib/server/fetchUsers";
 import { validateLoginForm } from "@/utils/validateLoginForm";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

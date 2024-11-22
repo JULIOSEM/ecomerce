@@ -5,7 +5,6 @@ export default function Cart() {
     return (
       <div className='pb-10 '>
           <CartGrid/>
-          
       </div>
     )
   }

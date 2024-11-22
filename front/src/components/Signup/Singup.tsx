@@ -25,7 +25,7 @@ export default function SignupForm() {
 
   const handleSubmit = async (values: IRegisterUser, { resetForm }: { resetForm: () => void }) => {
     const success = await postSignup(values);
-    if (success) {
+    if (success.success) {
       MySwal.fire({
         title: "Success!",
         text: "Profile created! Enjoy ;)",

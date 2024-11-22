@@ -18,6 +18,10 @@ export const checkUserExists = async (email: string): Promise<boolean> => {
 export const registerUserService = async (
   registerUserDto: RegisterUserDto
 ): Promise<User> => {
+  const findUser = await UserRepository.findOneBy({email:registerUserDto.email})
+  if(findUser){
+    throw new Error('User already exists')
+  }
   const user = await UserRepository.create(registerUserDto);
   await UserRepository.save(user);
   const credential = await createCredentialService({

@@ -27,7 +27,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signIn = async (credentials: ILoginUser) => {
-    console.log(credentials)
     try {
       const data = await postSignIn(credentials);
       console.log(data)
@@ -48,7 +47,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const signUp = async (user: Omit<IUser, "id">): Promise<boolean> => {
     try {
       const data = await postSignup(user);
-      if (data.id) {
+      if (data) {
         await signIn({ email: user.email, password: user.password });
         return true;
       } else {
